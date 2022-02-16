@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace AuthenticationAspDotnetCore.Models
@@ -9,5 +10,7 @@ namespace AuthenticationAspDotnetCore.Models
         public DateTime DateOfBirth { get; set; }
         public string CredentialId { get; set; }
         public string HealthCareId { get; set; }
+        [NotMapped] 
+        public string Role { get; set; }
     }
 }

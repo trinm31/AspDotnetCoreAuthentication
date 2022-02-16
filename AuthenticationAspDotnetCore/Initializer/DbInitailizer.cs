@@ -22,6 +22,7 @@ namespace AuthenticationAspDotnetCore.Initializer
         }
         public void Initialize()
         {
+            // check non migration if not conduct migration
             try
             {
                 if (_db.Database.GetPendingMigrations().Count() > 0)
@@ -39,7 +40,8 @@ namespace AuthenticationAspDotnetCore.Initializer
             
             _roleManager.CreateAsync(new IdentityRole("Admin")).GetAwaiter().GetResult();
             _roleManager.CreateAsync(new IdentityRole("Staff")).GetAwaiter().GetResult();
-
+            
+            // create admin and add to role admin
             _userManager.CreateAsync(new ApplicationUser
             {
                 UserName = "admin@gmail.com",
@@ -51,7 +53,7 @@ namespace AuthenticationAspDotnetCore.Initializer
             ApplicationUser userAdmin = _db.ApplicationUsers.Where(u => u.Email == "admin@gmail.com").FirstOrDefault();
 
             _userManager.AddToRoleAsync(userAdmin,"Admin").GetAwaiter().GetResult();
-            
+            // create Staff and add to role staff
             _userManager.CreateAsync(new ApplicationUser
             {
                 UserName = "Staff@gmail.com",
