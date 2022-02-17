@@ -43,7 +43,8 @@
                     {
                         <a asp-controller="Users" asp-action="LockUnlock" asp-route-id="@obj.Id" class="btn btn-warning">Unlock</a>
                     }
-                    <a asp-controller="Users" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger">Delete</a>
+                    <a asp-controller="Users" asp-action="ConfirmEmail" asp-route-id="@obj.Id" class="btn btn-success">Reset Password</a>
+                    <a asp-controller="Users" asp-action="Delete" onclick="confirm('Do you want to delete')" asp-route-id="@obj.Id" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
             i++;
