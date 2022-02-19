@@ -1,0 +1,40 @@
+@model IEnumerable<AuthenticationAspDotnetCore.Models.Product>
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-6">
+        <h1>Category Table</h1>
+    </div>
+    <div class="col-6">
+        <a asp-controller="Products" asp-action="UpSert" class="btn btn-success">Create New Product</a>
+    </div>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Category</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var obj in @Model)
+    {
+        <tr>
+            <th scope="row">@obj.Id</th>
+            <td>@obj.Name</td>
+            <td>@obj.Price</td>
+            <td>@obj.Category.Name</td>
+            <td>
+                <a asp-controller="Products" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-warning">Update</a>
+                <a asp-controller="Products" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
