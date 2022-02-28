@@ -8,6 +8,7 @@ using AuthenticationAspDotnetCore.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AuthenticationAspDotnetCore.Controllers
 {
@@ -54,31 +55,49 @@ namespace AuthenticationAspDotnetCore.Controllers
         {
             if (id != null)
             {
+                UserVM userVm = new UserVM();
                 var user = _db.ApplicationUsers.Find(id);
-                return View(user);
+                userVm.ApplicationUser = user;
+
+                userVm.RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem()
+                {
+                    Text = i,
+                    Value = i
+                });
+                return View(userVm);
             }
 
             return NotFound();
         }
 
         [HttpPost]
-        public IActionResult Update(ApplicationUser applicationUser)
+        public async Task<IActionResult> Update(UserVM userVm )
         {
             if (ModelState.IsValid)
             {
-                var user = _db.ApplicationUsers.Find(applicationUser.Id);
-                user.FullName = applicationUser.FullName;
-                user.DateOfBirth = applicationUser.DateOfBirth;
-                user.HealthCareId = applicationUser.HealthCareId;
-                user.CredentialId = applicationUser.CredentialId;
+                var user = _db.ApplicationUsers.Find(userVm.ApplicationUser.Id);
+                user.FullName = userVm.ApplicationUser.FullName;
+                user.DateOfBirth = userVm.ApplicationUser.DateOfBirth;
+                user.HealthCareId = userVm.ApplicationUser.HealthCareId;
+                user.CredentialId = userVm.ApplicationUser.CredentialId;
 
+                var roleOld = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRoleAsync(user, roleOld.First());
+                await _userManager.AddToRoleAsync(user, userVm.Role);
+        
                 _db.ApplicationUsers.Update(user);
                 _db.SaveChanges();
                 
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(applicationUser);
+            
+            userVm.RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem()
+            {
+                Text = i,
+                Value = i
+            });
+            
+            return View(userVm);
         }
         
         [HttpGet]
